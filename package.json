@@ -1,0 +1,21 @@
+{
+  "name": "sibd",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "engines": {
+    "node": "9.3.0",
+    "npm": "5.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Copons/SIBD.git"
+  },
+  "author": "Copons",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Copons/SIBD/issues"
+  },
+  "homepage": "https://github.com/Copons/SIBD"
+}

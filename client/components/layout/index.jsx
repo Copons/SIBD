@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import { Button, NavigationDrawer } from 'react-md';
 import { noop } from 'lodash-es';
 
+import MainTable from 'components/main-table';
+
 export class Layout extends PureComponent {
 	render() {
 		return (
@@ -17,7 +19,9 @@ export class Layout extends PureComponent {
 							search
 						</Button>
 					}
-				/>
+				>
+					<MainTable />
+				</NavigationDrawer>
 			</div>
 		);
 	}

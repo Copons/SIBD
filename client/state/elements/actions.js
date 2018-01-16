@@ -13,7 +13,7 @@ export const setElement = element => ({
 	element,
 });
 
-export const getElements = () => dispatch =>
+export const fetchElementsFromTheApi = () => dispatch =>
 	sibdGet('get/elements').then(elements =>
 		each(elements, element => dispatch(setElement(element)))
 	);

@@ -49,6 +49,7 @@
     "lodash-es": "^4.17.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-md": "^1.2.11",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2"
   }

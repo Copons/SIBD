@@ -1,10 +1,11 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
-import './style.scss';
+import Layout from './components/layout';
+import 'react-md/dist/react-md.indigo-pink.min.css';
 
 export const Sibd = () => (
 	<div>
-		<h1>SIBD</h1>
+		<Layout />
 	</div>
 );
 

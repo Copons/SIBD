@@ -1,6 +1,5 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PATH_CLIENT = path.resolve(__dirname, 'client');
@@ -19,22 +18,6 @@ module.exports = {
 				exclude: /node_modules/,
 				use: ['babel-loader'],
 			},
-			{
-				test: /\.(css|scss)$/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: [
-						{
-							loader: 'css-loader',
-							options: { minimize: true, sourceMap: true },
-						},
-						{
-							loader: 'sass-loader',
-							options: { sourceMap: true },
-						},
-					],
-				}),
-			},
 		],
 	},
 	resolve: {
@@ -42,7 +25,6 @@ module.exports = {
 	},
 	plugins: [
 		new CleanWebpackPlugin([PATH_DIST]),
-		new ExtractTextPlugin('style.scss'),
 		new HtmlWebpackPlugin({ template: path.join(PATH_CLIENT, 'index.html') }),
 	],
 };

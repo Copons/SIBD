@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PATH_API = require('./api.config');
 
 const PATH_CLIENT = path.resolve(__dirname, 'client');
 const PATH_DIST = path.resolve(__dirname, 'dist');
@@ -38,5 +39,10 @@ module.exports = {
 		new HtmlWebpackPlugin({ template: path.join(PATH_CLIENT, 'index.html') }),
 		new webpack.NamedModulesPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
+		new webpack.DefinePlugin({
+			API: JSON.stringify(
+				process.env.NODE_ENV === 'production' ? PATH_API.PROD : PATH_API.DEV
+			),
+		}),
 	],
 };

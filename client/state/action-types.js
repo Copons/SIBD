@@ -1,0 +1,2 @@
+export const ELEMENT_REMOVE = 'ELEMENT_REMOVE';
+export const ELEMENT_SET = 'ELEMENT_SET';

@@ -22,6 +22,7 @@ module.exports = {
 	},
 	resolve: {
 		extensions: ['.js', '.jsx'],
+		modules: [PATH_CLIENT, 'node_modules'],
 	},
 	plugins: [
 		new CleanWebpackPlugin([PATH_DIST]),

@@ -1,19 +1,13 @@
 const path = require('path');
-const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const PATH_API = require('./api.config');
 
 const PATH_CLIENT = path.resolve(__dirname, 'client');
 const PATH_DIST = path.resolve(__dirname, 'dist');
 
 module.exports = {
 	entry: path.join(PATH_CLIENT, 'index.js'),
-	devtool: 'inline-source-map',
-	devServer: {
-		contentBase: PATH_DIST,
-		hot: true,
-	},
 	output: {
 		filename: 'bundle.js',
 		path: PATH_DIST,
@@ -27,7 +21,19 @@ module.exports = {
 			},
 			{
 				test: /\.(css|scss)$/,
-				use: ['style-loader', 'css-loader', 'sass-loader'],
+				use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: [
+						{
+							loader: 'css-loader',
+							options: { minimize: true, sourceMap: true },
+						},
+						{
+							loader: 'sass-loader',
+							options: { sourceMap: true },
+						},
+					],
+				}),
 			},
 		],
 	},
@@ -36,13 +42,7 @@ module.exports = {
 	},
 	plugins: [
 		new CleanWebpackPlugin([PATH_DIST]),
+		new ExtractTextPlugin('style.scss'),
 		new HtmlWebpackPlugin({ template: path.join(PATH_CLIENT, 'index.html') }),
-		new webpack.NamedModulesPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
-		new webpack.DefinePlugin({
-			API: JSON.stringify(
-				process.env.NODE_ENV === 'production' ? PATH_API.PROD : PATH_API.DEV
-			),
-		}),
 	],
 };

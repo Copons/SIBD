@@ -4,7 +4,7 @@ const config = require('./webpack.config');
 const PATH_API = require('./api.config');
 
 module.exports = merge(config, {
-	devtool: 'inline-source-map',
+	devtool: 'cheap-module-eval-source-map',
 	devServer: {
 		contentBase: './dist',
 		hot: true,

@@ -15,7 +15,8 @@ import {
 
 import { dateFromMySQL, dateToMySQL } from 'lib/dates';
 import { fetchAllElements, updateElement } from 'state/elements/actions';
-import { getElements } from 'state/elements/selectors';
+import { getElements, getElementsByYear } from 'state/elements/selectors';
+import { getViewFilter } from 'state/ui/selectors';
 import Rating from 'components/rating';
 import MainTableHeader from 'components/main-table/main-table-header';
 import { TYPES } from 'components/main-table/constants';
@@ -132,7 +133,15 @@ export class MainTable extends Component {
 	}
 }
 
-const mapStateToProps = state => ({ elements: getElements(state) });
+const mapStateToProps = state => {
+	const viewFilterYear = getViewFilter(state, 'year');
+	const elements =
+		'all' === viewFilterYear
+			? getElements(state)
+			: getElementsByYear(state, viewFilterYear);
+
+	return { elements };
+};
 
 const mapDispatchToProps = { fetchAllElements, updateElement };
 

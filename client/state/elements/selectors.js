@@ -1,4 +1,4 @@
-import { filter, get } from 'lodash-es';
+import { filter, get, startsWith } from 'lodash-es';
 
 export const getElement = (state, elementId) =>
 	get(state, ['elements', elementId]);
@@ -6,4 +6,4 @@ export const getElement = (state, elementId) =>
 export const getElements = state => get(state, 'elements', []);
 
 export const getElementsByYear = (state, year) =>
-	filter(getElements(state), element => element.year === year);
+	filter(getElements(state), element => startsWith(element.end, year));

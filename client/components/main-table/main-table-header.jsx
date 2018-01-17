@@ -12,6 +12,7 @@ import {
 
 import { dateToMySQL, newDate } from 'lib/dates';
 import { fetchAllElements, insertElement } from 'state/elements/actions';
+import { getViewFilter } from 'state/ui/selectors';
 import Rating from 'components/rating';
 import { TYPES } from 'components/main-table/constants';
 
@@ -51,10 +52,20 @@ export class MainTableHeader extends PureComponent {
 			type: this.state.insertElementType,
 		};
 		this.props.insertElement(element);
-		this.closeInsertDialog();
+		this.resetState();
 	};
 
 	openInsertDialog = () => this.setState({ showInsertDialog: true });
+
+	resetState = () =>
+		this.setState({
+			insertElementEnd: newDate(),
+			insertElementRating: '',
+			insertElementStart: newDate(),
+			insertElementTitle: '',
+			insertElementType: '',
+			showInsertDialog: false,
+		});
 
 	updateForm = field => value => this.setState({ [field]: value });
 
@@ -71,6 +82,7 @@ export class MainTableHeader extends PureComponent {
 	);
 
 	render() {
+		const { viewFilterYear } = this.props;
 		const {
 			insertElementEnd,
 			insertElementStart,
@@ -79,8 +91,10 @@ export class MainTableHeader extends PureComponent {
 			showInsertDialog,
 		} = this.state;
 
+		const title = 'all' === viewFilterYear ? 'All' : viewFilterYear;
+
 		return (
-			<TableCardHeader title="All" visible={false}>
+			<TableCardHeader title={title} visible={false}>
 				<Button icon onClick={this.openInsertDialog} primary>
 					add
 				</Button>
@@ -142,6 +156,10 @@ export class MainTableHeader extends PureComponent {
 	}
 }
 
+const mapStateToProps = state => ({
+	viewFilterYear: getViewFilter(state, 'year'),
+});
+
 const mapDispatchToProps = { fetchAllElements, insertElement };
 
-export default connect(null, mapDispatchToProps)(MainTableHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(MainTableHeader);

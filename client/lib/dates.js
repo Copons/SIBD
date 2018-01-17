@@ -14,3 +14,5 @@ export const dateToMySQL = date => {
 
 export const newDate = () =>
 	dateFromMySQL(new Date().toISOString().substr(0, 10));
+
+export const getCurrentYear = () => new Date().getFullYear();

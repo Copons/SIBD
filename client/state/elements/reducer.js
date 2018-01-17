@@ -5,6 +5,7 @@ import {
 	ELEMENT_SET,
 	ELEMENTS_RESET,
 } from 'state/action-types';
+import { parseElement } from 'state/elements/utils';
 
 export const elements = (state = {}, action) => {
 	switch (action.type) {
@@ -13,7 +14,7 @@ export const elements = (state = {}, action) => {
 		case ELEMENT_SET:
 			return {
 				...state,
-				[action.element.id]: action.element,
+				[action.element.id]: parseElement(action.element),
 			};
 		case ELEMENTS_RESET:
 			return {};

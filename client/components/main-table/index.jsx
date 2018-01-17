@@ -47,7 +47,7 @@ export class MainTable extends Component {
 	sortElements = () => {
 		const { elements } = this.props;
 		const { sortAscending, sortField } = this.state;
-		const sortedElements = sortBy(elements, ['start', sortField]);
+		const sortedElements = sortBy(elements, [sortField, 'start']);
 		return sortAscending ? sortedElements : sortedElements.reverse();
 	};
 
@@ -86,7 +86,7 @@ export class MainTable extends Component {
 		return (
 			<div>
 				<MainTableHeader />
-				<DataTable plain>
+				<DataTable className="main-table" plain>
 					<TableHeader>
 						<TableRow>{this.renderHeader()}</TableRow>
 					</TableHeader>
@@ -122,7 +122,10 @@ export class MainTable extends Component {
 									/>
 								</TableColumn>
 								<TableColumn>
-									<Rating rating={element.rating} />
+									<Rating
+										rating={element.rating}
+										onChange={this.updateElement(element, 'rating')}
+									/>
 								</TableColumn>
 							</TableRow>
 						))}

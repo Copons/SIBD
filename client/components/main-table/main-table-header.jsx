@@ -11,15 +11,15 @@ import {
 } from 'react-md';
 
 import { dateToMySQL, newDate } from 'lib/dates';
+import { getRatingItems } from 'lib/ratings';
 import { fetchAllElements, insertElement } from 'state/elements/actions';
 import { getViewFilter } from 'state/ui/selectors';
-import Rating from 'components/rating';
 import { TYPES } from 'components/main-table/constants';
 
 export class MainTableHeader extends PureComponent {
 	state = {
 		insertElementEnd: newDate(),
-		insertElementRating: '',
+		insertElementRating: 0,
 		insertElementStart: newDate(),
 		insertElementTitle: '',
 		insertElementType: '',
@@ -85,6 +85,7 @@ export class MainTableHeader extends PureComponent {
 		const { viewFilterYear } = this.props;
 		const {
 			insertElementEnd,
+			insertElementRating,
 			insertElementStart,
 			insertElementTitle,
 			insertElementType,
@@ -148,7 +149,15 @@ export class MainTableHeader extends PureComponent {
 							locales="en-GB"
 							onChange={this.updateForm('insertElementEnd')}
 						/>
-						<Rating />
+						<SelectField
+							fullWidth
+							id="insert-element-dialog-rating"
+							label="Rating"
+							menuItems={getRatingItems()}
+							name="rating"
+							onChange={this.updateForm('insertElementRating')}
+							value={insertElementRating}
+						/>
 					</section>
 				</DialogContainer>
 			</TableCardHeader>

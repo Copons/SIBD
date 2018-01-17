@@ -1,30 +1,86 @@
-import React from 'react';
-import { FontIcon } from 'react-md';
+import React, { PureComponent } from 'react';
+import { Button, FontIcon, SelectField } from 'react-md';
 import classNames from 'classnames';
+
+import { getRatingItems } from 'lib/ratings';
 
 import './style.scss';
 
-export const Rating = props => {
-	const rating = props.rating || 0;
-	const fiveStarRating = rating / 2;
-	const fullStars = Math.floor(fiveStarRating);
-	const halfStar = 0 !== fiveStarRating % 1 ? 1 : 0;
+export class Rating extends PureComponent {
+	static defaultProps = {
+		rating: 0,
+	};
 
-	const classes = classNames('rating', props.className);
+	state = {
+		editMode: false,
+		rating: 0,
+	};
 
-	return (
-		<div className={classes} {...props}>
-			{[...new Array(fullStars)].map((star, index) => (
-				<FontIcon key={`full-${index}`}>star</FontIcon>
-			))}
+	componentWillMount() {
+		this.setState({ rating: this.props.rating });
+	}
 
-			{!!halfStar && <FontIcon>star_half</FontIcon>}
+	componentWillReceiveProps(nextProps) {
+		if (this.props.rating !== nextProps.rating) {
+			this.setState({ rating: nextProps.rating });
+		}
+	}
 
-			{[...new Array(5 - fullStars - halfStar)].map((star, index) => (
-				<FontIcon key={`full-${index}`}>star_border</FontIcon>
-			))}
-		</div>
+	enterEditMode = () => this.setState({ editMode: true });
+
+	leaveEditMode = () => this.setState({ editMode: false });
+
+	updateRating = value => {
+		this.props.onChange(value);
+		this.setState({ editMode: false, rating: value });
+	};
+
+	renderEditVersion = () => (
+		<span className="rating-edit-mode">
+			<SelectField
+				id="insert-element-dialog-rating"
+				menuItems={getRatingItems()}
+				name="rating"
+				onChange={this.updateRating}
+				value={this.state.rating}
+			/>
+			<Button icon onClick={this.leaveEditMode}>
+				close
+			</Button>
+		</span>
 	);
-};
+
+	renderViewVersion = () => {
+		const { rating } = this.props;
+		const fiveStarRating = rating / 2;
+		const fullStars = Math.floor(fiveStarRating);
+		const halfStar = 0 !== fiveStarRating % 1 ? 1 : 0;
+
+		return (
+			<span className="rating-view-mode" onClick={this.enterEditMode}>
+				{[...new Array(fullStars)].map((star, index) => (
+					<FontIcon key={`full-${index}`}>star</FontIcon>
+				))}
+
+				{!!halfStar && <FontIcon>star_half</FontIcon>}
+
+				{[...new Array(5 - fullStars - halfStar)].map((star, index) => (
+					<FontIcon key={`full-${index}`}>star_border</FontIcon>
+				))}
+			</span>
+		);
+	};
+
+	render() {
+		const { className } = this.props;
+		const { editMode } = this.state;
+		const classes = classNames('rating', className);
+		return (
+			<div className={classes} {...this.props}>
+				{editMode ? this.renderEditVersion() : this.renderViewVersion()}
+			</div>
+		);
+	}
+}
 
 export default Rating;

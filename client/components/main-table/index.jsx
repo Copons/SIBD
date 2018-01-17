@@ -4,6 +4,7 @@ import { isEqual, map, sortBy } from 'lodash-es';
 import classNames from 'classnames';
 import {
 	DataTable,
+	DatePicker,
 	EditDialogColumn,
 	SelectFieldColumn,
 	TableHeader,
@@ -12,6 +13,7 @@ import {
 	TableColumn,
 } from 'react-md';
 
+import { dateFromMySQL, dateToMySQL } from 'lib/dates';
 import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements } from 'state/elements/selectors';
 import Rating from 'components/rating';
@@ -48,8 +50,11 @@ export class MainTable extends Component {
 		return sortAscending ? sortedElements : sortedElements.reverse();
 	};
 
-	updateElement = (element, field) => value =>
-		this.props.updateElement({ ...element, [field]: value });
+	updateElement = (element, field) => value => {
+		const parsedValue =
+			'start' === field || 'end' === field ? dateToMySQL(value) : value;
+		this.props.updateElement({ ...element, [field]: parsedValue });
+	};
 
 	renderHeader = () => {
 		const { sortAscending, sortField } = this.state;
@@ -64,7 +69,6 @@ export class MainTable extends Component {
 		return map(headerItems, ({ label, name }) => (
 			<TableColumn
 				className={classNames({ 'sort-field': name === sortField })}
-				grow
 				key={name}
 				onClick={this.changeSort(name)}
 				role="button"
@@ -100,11 +104,21 @@ export class MainTable extends Component {
 									menuItems={TYPES}
 									onChange={this.updateElement(element, 'type')}
 								/>
-								<TableColumn className="table-column-nowrap">
-									{element.start}
+								<TableColumn className="table-column-fixed-min-width">
+									<DatePicker
+										defaultValue={dateFromMySQL(element.start)}
+										id={`element-${element.id}-start`}
+										locales="en-GB"
+										onChange={this.updateElement(element, 'start')}
+									/>
 								</TableColumn>
-								<TableColumn className="table-column-nowrap">
-									{element.end}
+								<TableColumn className="table-column-fixed-min-width">
+									<DatePicker
+										defaultValue={dateFromMySQL(element.end)}
+										id={`element-${element.id}-end`}
+										locales="en-GB"
+										onChange={this.updateElement(element, 'end')}
+									/>
 								</TableColumn>
 								<TableColumn>
 									<Rating rating={element.rating} />

@@ -2,22 +2,24 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import {
 	Button,
+	DatePicker,
 	DialogContainer,
-	FloatingLabel,
 	SelectField,
 	TableCardHeader,
 	TextField,
+	Toolbar,
 } from 'react-md';
 
+import { dateToMySQL, newDate } from 'lib/dates';
 import { fetchAllElements, insertElement } from 'state/elements/actions';
 import Rating from 'components/rating';
 import { TYPES } from 'components/main-table/constants';
 
 export class MainTableHeader extends PureComponent {
 	state = {
-		insertElementEnd: '',
+		insertElementEnd: newDate(),
 		insertElementRating: '',
-		insertElementStart: '',
+		insertElementStart: newDate(),
 		insertElementTitle: '',
 		insertElementType: '',
 		showInsertDialog: false,
@@ -41,13 +43,14 @@ export class MainTableHeader extends PureComponent {
 	];
 
 	handleSubmit = () => {
-		this.props.insertElement({
-			end: this.state.insertElementEnd,
+		const element = {
+			end: dateToMySQL(this.state.insertElementEnd),
 			rating: this.state.insertElementRating,
-			start: this.state.insertElementStart,
+			start: dateToMySQL(this.state.insertElementStart),
 			title: this.state.insertElementTitle,
 			type: this.state.insertElementType,
-		});
+		};
+		this.props.insertElement(element);
 		this.closeInsertDialog();
 	};
 
@@ -55,8 +58,26 @@ export class MainTableHeader extends PureComponent {
 
 	updateForm = field => value => this.setState({ [field]: value });
 
+	renderCloseButton = () => (
+		<Button icon onClick={this.closeInsertDialog}>
+			close
+		</Button>
+	);
+
+	renderSaveButton = () => (
+		<Button icon onClick={this.handleSubmit}>
+			save
+		</Button>
+	);
+
 	render() {
-		const { elementTitle, elementType, showInsertDialog } = this.state;
+		const {
+			insertElementEnd,
+			insertElementStart,
+			insertElementTitle,
+			insertElementType,
+			showInsertDialog,
+		} = this.state;
 
 		return (
 			<TableCardHeader title="All" visible={false}>
@@ -68,29 +89,53 @@ export class MainTableHeader extends PureComponent {
 				</Button>
 				<DialogContainer
 					actions={this.getActions()}
+					fullPage
 					id="insert-element-dialog"
 					initialFocus="insert-element-dialog-title"
 					onHide={this.closeInsertDialog}
-					title="Add new element"
+					aria-label="Add new element"
 					visible={showInsertDialog}
 				>
-					<TextField
-						id="insert-element-dialog-title"
-						label="Title"
-						name="title"
-						onChange={this.updateForm('insertElementTitle')}
-						value={elementTitle}
+					<Toolbar
+						actions={this.renderSaveButton()}
+						colored
+						fixed
+						nav={this.renderCloseButton()}
+						title="New Element"
 					/>
-					<SelectField
-						fullWidth
-						id="insert-element-dialog-type"
-						label="Type"
-						menuItems={TYPES}
-						name="type"
-						onChange={this.updateForm('insertElementType')}
-						value={elementType}
-					/>
-					<Rating />
+					<section className="md-toolbar-relative">
+						<TextField
+							id="insert-element-dialog-title"
+							label="Title"
+							name="title"
+							onChange={this.updateForm('insertElementTitle')}
+							value={insertElementTitle}
+						/>
+						<SelectField
+							fullWidth
+							id="insert-element-dialog-type"
+							label="Type"
+							menuItems={TYPES}
+							name="type"
+							onChange={this.updateForm('insertElementType')}
+							value={insertElementType}
+						/>
+						<DatePicker
+							defaultValue={insertElementStart}
+							id="insert-element-dialog-start"
+							label="Start Date"
+							locales="en-GB"
+							onChange={this.updateForm('insertElementStart')}
+						/>
+						<DatePicker
+							defaultValue={insertElementEnd}
+							id="insert-element-dialog-end"
+							label="End Date"
+							locales="en-GB"
+							onChange={this.updateForm('insertElementEnd')}
+						/>
+						<Rating />
+					</section>
 				</DialogContainer>
 			</TableCardHeader>
 		);

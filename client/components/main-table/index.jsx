@@ -4,15 +4,18 @@ import { isEqual, map, sortBy } from 'lodash-es';
 import classNames from 'classnames';
 import {
 	DataTable,
+	EditDialogColumn,
+	SelectFieldColumn,
 	TableHeader,
 	TableBody,
 	TableRow,
 	TableColumn,
 } from 'react-md';
 
-import { fetchElementsFromTheApi } from 'state/elements/actions';
+import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements } from 'state/elements/selectors';
 import Rating from 'components/rating';
+import { TYPES } from 'components/main-table/constants';
 
 import './style.scss';
 
@@ -23,7 +26,7 @@ export class MainTable extends Component {
 	};
 
 	componentWillMount() {
-		this.props.fetchElementsFromTheApi();
+		this.props.fetchAllElements();
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -43,6 +46,9 @@ export class MainTable extends Component {
 		const sortedElements = sortBy(elements, ['start', sortField]);
 		return sortAscending ? sortedElements : sortedElements.reverse();
 	};
+
+	updateElement = (element, field) => value =>
+		this.props.updateElement({ ...element, [field]: value });
 
 	renderHeader = () => {
 		const { sortAscending, sortField } = this.state;
@@ -79,10 +85,24 @@ export class MainTable extends Component {
 				<TableBody>
 					{map(elements, element => (
 						<TableRow key={element.id}>
-							<TableColumn>{element.title}</TableColumn>
-							<TableColumn>{element.type}</TableColumn>
-							<TableColumn>{element.start}</TableColumn>
-							<TableColumn>{element.end}</TableColumn>
+							<EditDialogColumn
+								defaultValue={element.title}
+								label="Title"
+								okOnOutsideClick={false}
+								onOkClick={this.updateElement(element, 'title')}
+								visibleOnFocus={false}
+							/>
+							<SelectFieldColumn
+								defaultValue={element.type}
+								menuItems={TYPES}
+								onChange={this.updateElement(element, 'type')}
+							/>
+							<TableColumn className="table-column-nowrap">
+								{element.start}
+							</TableColumn>
+							<TableColumn className="table-column-nowrap">
+								{element.end}
+							</TableColumn>
 							<TableColumn>
 								<Rating rating={element.rating} />
 							</TableColumn>
@@ -96,6 +116,6 @@ export class MainTable extends Component {
 
 const mapStateToProps = state => ({ elements: getElements(state) });
 
-const mapDispatchToProps = { fetchElementsFromTheApi };
+const mapDispatchToProps = { fetchAllElements, updateElement };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainTable);

@@ -1,6 +1,10 @@
 import { omit } from 'lodash-es';
 
-import { ELEMENT_REMOVE, ELEMENT_SET } from 'state/action-types';
+import {
+	ELEMENT_REMOVE,
+	ELEMENT_SET,
+	ELEMENTS_RESET,
+} from 'state/action-types';
 
 export const elements = (state = {}, action) => {
 	switch (action.type) {
@@ -11,6 +15,8 @@ export const elements = (state = {}, action) => {
 				...state,
 				[action.element.id]: action.element,
 			};
+		case ELEMENTS_RESET:
+			return {};
 	}
 	return state;
 };

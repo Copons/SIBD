@@ -14,7 +14,7 @@ export const sibdGet = (endpoint, query = {}) => {
 		.catch(e => log(e));
 };
 
-export const sibdUpdate = (endpoint, body = {}) => {
+export const sibdPost = (endpoint, body = {}) => {
 	const formData = new FormData();
 	each(body, (value, name) => formData.append(name, value));
 	return fetch(apiPath(endpoint), { method: 'POST', body: formData })

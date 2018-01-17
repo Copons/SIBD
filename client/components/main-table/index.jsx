@@ -15,6 +15,7 @@ import {
 import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements } from 'state/elements/selectors';
 import Rating from 'components/rating';
+import MainTableHeader from 'components/main-table/main-table-header';
 import { TYPES } from 'components/main-table/constants';
 
 import './style.scss';
@@ -78,38 +79,41 @@ export class MainTable extends Component {
 		const elements = this.sortElements();
 
 		return (
-			<DataTable plain>
-				<TableHeader>
-					<TableRow>{this.renderHeader()}</TableRow>
-				</TableHeader>
-				<TableBody>
-					{map(elements, element => (
-						<TableRow key={element.id}>
-							<EditDialogColumn
-								defaultValue={element.title}
-								label="Title"
-								okOnOutsideClick={false}
-								onOkClick={this.updateElement(element, 'title')}
-								visibleOnFocus={false}
-							/>
-							<SelectFieldColumn
-								defaultValue={element.type}
-								menuItems={TYPES}
-								onChange={this.updateElement(element, 'type')}
-							/>
-							<TableColumn className="table-column-nowrap">
-								{element.start}
-							</TableColumn>
-							<TableColumn className="table-column-nowrap">
-								{element.end}
-							</TableColumn>
-							<TableColumn>
-								<Rating rating={element.rating} />
-							</TableColumn>
-						</TableRow>
-					))}
-				</TableBody>
-			</DataTable>
+			<div>
+				<MainTableHeader />
+				<DataTable plain>
+					<TableHeader>
+						<TableRow>{this.renderHeader()}</TableRow>
+					</TableHeader>
+					<TableBody>
+						{map(elements, element => (
+							<TableRow key={`element-${element.id}`}>
+								<EditDialogColumn
+									defaultValue={element.title}
+									label="Title"
+									okOnOutsideClick={false}
+									onOkClick={this.updateElement(element, 'title')}
+									visibleOnFocus={false}
+								/>
+								<SelectFieldColumn
+									defaultValue={element.type}
+									menuItems={TYPES}
+									onChange={this.updateElement(element, 'type')}
+								/>
+								<TableColumn className="table-column-nowrap">
+									{element.start}
+								</TableColumn>
+								<TableColumn className="table-column-nowrap">
+									{element.end}
+								</TableColumn>
+								<TableColumn>
+									<Rating rating={element.rating} />
+								</TableColumn>
+							</TableRow>
+						))}
+					</TableBody>
+				</DataTable>
+			</div>
 		);
 	}
 }

@@ -1,2 +1,3 @@
 export const ELEMENT_REMOVE = 'ELEMENT_REMOVE';
 export const ELEMENT_SET = 'ELEMENT_SET';
+export const ELEMENTS_RESET = 'ELEMENTS_RESET';

@@ -1,5 +1,10 @@
-.main-table table {
-	margin-bottom: 500px;
+.main-table {
+	table {
+		margin-bottom: 500px;
+	}
+	th {
+		cursor: pointer;
+	}
 }
 
 .sort-field {
@@ -17,6 +22,29 @@
 .table-column-fixed-min-width {
 	min-width: 200px;
 	width: 200px;
+}
+
+[class*='table-column-type-'] .md-icon-text {
+	color: #fff;
+	font-weight: bold;
+}
+.table-column-type-book .md-menu--select-field {
+	background-color: #673ab7;
+}
+.table-column-type-comic .md-menu--select-field {
+	background-color: #43a047;
+}
+.table-column-type-live .md-menu--select-field {
+	background-color: #d500f9;
+}
+.table-column-type-movie .md-menu--select-field {
+	background-color: #ff9100;
+}
+.table-column-type-tv-show .md-menu--select-field {
+	background-color: #d50000;
+}
+.table-column-type-videogame .md-menu--select-field {
+	background-color: #2962ff;
 }
 
 #insert-element-dialog section {

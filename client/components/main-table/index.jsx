@@ -73,7 +73,7 @@ export class MainTable extends Component {
 				key={name}
 				onClick={this.changeSort(name)}
 				role="button"
-				sorted={sortAscending}
+				sorted={name === sortField ? sortAscending : undefined}
 			>
 				{label}
 			</TableColumn>
@@ -108,6 +108,9 @@ export class MainTable extends Component {
 									visibleOnFocus={false}
 								/>
 								<SelectFieldColumn
+									className={`table-column-fixed-min-width table-column-type-${
+										element.type
+									}`}
 									defaultValue={element.type}
 									menuItems={TYPES}
 									onChange={this.updateElement(element, 'type')}

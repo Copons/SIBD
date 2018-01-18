@@ -18,9 +18,9 @@ import { TYPES } from 'components/main-table/constants';
 
 export class MainTableHeader extends PureComponent {
 	state = {
-		insertElementEnd: newDate(),
+		insertElementEnd: undefined,
 		insertElementRating: 0,
-		insertElementStart: newDate(),
+		insertElementStart: undefined,
 		insertElementTitle: '',
 		insertElementType: '',
 		showInsertDialog: false,

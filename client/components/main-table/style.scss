@@ -6,12 +6,17 @@
 	font-weight: 600;
 }
 
+.table-column-title .md-edit-dialog__label {
+	font-weight: bold;
+}
+
 .table-column-nowrap {
 	white-space: nowrap;
 }
 
 .table-column-fixed-min-width {
 	min-width: 200px;
+	width: 200px;
 }
 
 #insert-element-dialog section {

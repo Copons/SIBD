@@ -60,11 +60,11 @@ export class MainTable extends Component {
 	renderHeader = () => {
 		const { sortAscending, sortField } = this.state;
 		const headerItems = [
+			{ label: 'Rating', name: 'rating' },
 			{ label: 'Title', name: 'title' },
 			{ label: 'Type', name: 'type' },
 			{ label: 'Start', name: 'start' },
 			{ label: 'End', name: 'end' },
-			{ label: 'Rating', name: 'rating' },
 		];
 
 		return map(headerItems, ({ label, name }) => (
@@ -93,7 +93,14 @@ export class MainTable extends Component {
 					<TableBody>
 						{map(elements, element => (
 							<TableRow key={`element-${element.id}`}>
+								<TableColumn className="table-column-fixed-min-width">
+									<Rating
+										rating={element.rating}
+										onChange={this.updateElement(element, 'rating')}
+									/>
+								</TableColumn>
 								<EditDialogColumn
+									className="table-column-title"
 									defaultValue={element.title}
 									label="Title"
 									okOnOutsideClick={false}
@@ -119,12 +126,6 @@ export class MainTable extends Component {
 										id={`element-${element.id}-end`}
 										locales="en-GB"
 										onChange={this.updateElement(element, 'end')}
-									/>
-								</TableColumn>
-								<TableColumn>
-									<Rating
-										rating={element.rating}
-										onChange={this.updateElement(element, 'rating')}
 									/>
 								</TableColumn>
 							</TableRow>

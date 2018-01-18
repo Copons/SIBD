@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Button, FontIcon, SelectField } from 'react-md';
+import Button from 'react-md/lib/Buttons/Button';
+import FontIcon from 'react-md/lib/FontIcons/FontIcon';
+import SelectField from 'react-md/lib/SelectFields/SelectField';
 import classNames from 'classnames';
 
 import { getRatingItems } from 'lib/ratings';

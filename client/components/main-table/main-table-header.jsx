@@ -1,14 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import {
-	Button,
-	DatePicker,
-	DialogContainer,
-	SelectField,
-	TableCardHeader,
-	TextField,
-	Toolbar,
-} from 'react-md';
+import Button from 'react-md/lib/Buttons/Button';
+import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
+import DialogContainer from 'react-md/lib/Dialogs/DialogContainer';
+import SelectField from 'react-md/lib/SelectFields/SelectField';
+import TableCardHeader from 'react-md/lib/DataTables/TableCardHeader';
+import TextField from 'react-md/lib/TextFields/TextField';
+import Toolbar from 'react-md/lib/Toolbars/Toolbar';
 
 import { dateToMySQL, newDate } from 'lib/dates';
 import { getRatingItems } from 'lib/ratings';

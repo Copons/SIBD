@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Button, ListItem, NavigationDrawer } from 'react-md';
+import Button from 'react-md/lib/Buttons/Button';
+import ListItem from 'react-md/lib/Lists/ListItem';
+import NavigationDrawer from 'react-md/lib/NavigationDrawers/NavigationDrawer';
 import { concat, noop } from 'lodash-es';
 
 import { getCurrentYear } from 'lib/dates';

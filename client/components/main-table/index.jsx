@@ -2,16 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { isEqual, map, sortBy } from 'lodash-es';
 import classNames from 'classnames';
-import {
-	DataTable,
-	DatePicker,
-	EditDialogColumn,
-	SelectFieldColumn,
-	TableHeader,
-	TableBody,
-	TableRow,
-	TableColumn,
-} from 'react-md';
+import DataTable from 'react-md/lib/DataTables/DataTable';
+import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
+import EditDialogColumn from 'react-md/lib/DataTables/EditDialogColumn';
+import SelectFieldColumn from 'react-md/lib/DataTables/SelectFieldColumn';
+import TableBody from 'react-md/lib/DataTables/TableBody';
+import TableColumn from 'react-md/lib/DataTables/TableColumn';
+import TableHeader from 'react-md/lib/DataTables/TableHeader';
+import TableRow from 'react-md/lib/DataTables/TableRow';
 
 import { dateFromMySQL, dateToMySQL } from 'lib/dates';
 import { fetchAllElements, updateElement } from 'state/elements/actions';

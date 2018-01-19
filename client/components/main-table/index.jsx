@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { isEqual, map, sortBy } from 'lodash-es';
-import classNames from 'classnames';
 import DataTable from 'react-md/lib/DataTables/DataTable';
 import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
 import EditDialogColumn from 'react-md/lib/DataTables/EditDialogColumn';
 import SelectFieldColumn from 'react-md/lib/DataTables/SelectFieldColumn';
 import TableBody from 'react-md/lib/DataTables/TableBody';
 import TableColumn from 'react-md/lib/DataTables/TableColumn';
-import TableHeader from 'react-md/lib/DataTables/TableHeader';
 import TableRow from 'react-md/lib/DataTables/TableRow';
 
+import MainTableCardHeader from 'components/main-table/main-table-card-header';
+import MainTableHeader from 'components/main-table/main-table-header';
+import Rating from 'components/rating';
 import { dateFromMySQL, dateToMySQL } from 'lib/dates';
+import { TYPES } from 'lib/types';
 import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements, getElementsByYear } from 'state/elements/selectors';
 import { getViewFilter } from 'state/ui/selectors';
-import Rating from 'components/rating';
-import MainTableHeader from 'components/main-table/main-table-header';
-import { TYPES } from 'components/main-table/constants';
 
 import './style.scss';
 
@@ -55,39 +54,19 @@ export class MainTable extends Component {
 		this.props.updateElement({ ...element, [field]: parsedValue });
 	};
 
-	renderHeader = () => {
-		const { sortAscending, sortField } = this.state;
-		const headerItems = [
-			{ label: 'Rating', name: 'rating' },
-			{ label: 'Title', name: 'title' },
-			{ label: 'Type', name: 'type' },
-			{ label: 'Start', name: 'start' },
-			{ label: 'End', name: 'end' },
-		];
-
-		return map(headerItems, ({ label, name }) => (
-			<TableColumn
-				className={classNames({ 'sort-field': name === sortField })}
-				key={name}
-				onClick={this.changeSort(name)}
-				role="button"
-				sorted={name === sortField ? sortAscending : undefined}
-			>
-				{label}
-			</TableColumn>
-		));
-	};
-
 	render() {
+		const { sortAscending, sortField } = this.state;
 		const elements = this.sortElements();
 
 		return (
 			<div>
-				<MainTableHeader />
+				<MainTableCardHeader />
 				<DataTable className="main-table" plain>
-					<TableHeader>
-						<TableRow>{this.renderHeader()}</TableRow>
-					</TableHeader>
+					<MainTableHeader
+						changeSort={this.changeSort}
+						sortAscending={sortAscending}
+						sortField={sortField}
+					/>
 					<TableBody>
 						{map(elements, element => (
 							<TableRow key={`element-${element.id}`}>

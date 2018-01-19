@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { concat, noop } from 'lodash-es';
 import Button from 'react-md/lib/Buttons/Button';
 import ListItem from 'react-md/lib/Lists/ListItem';
 import NavigationDrawer from 'react-md/lib/NavigationDrawers/NavigationDrawer';
-import { concat, noop } from 'lodash-es';
 
+import MainTable from 'components/main-table';
 import { getCurrentYear } from 'lib/dates';
 import { fetchAllYears, setViewFilters } from 'state/ui/actions';
 import { getViewFilter, getYears } from 'state/ui/selectors';
-import MainTable from 'components/main-table';
 
 export class Layout extends PureComponent {
 	state = {
@@ -56,24 +56,22 @@ export class Layout extends PureComponent {
 	render() {
 		const { showDrawer } = this.state;
 		return (
-			<div>
-				<NavigationDrawer
-					desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
-					mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY}
-					tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
-					onVisibilityChange={this.toggleDrawer}
-					navItems={this.getNavItems()}
-					toolbarTitle="SIBD"
-					toolbarActions={
-						<Button icon onClick={noop}>
-							search
-						</Button>
-					}
-					visible={showDrawer}
-				>
-					<MainTable />
-				</NavigationDrawer>
-			</div>
+			<NavigationDrawer
+				desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
+				mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY}
+				tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
+				onVisibilityChange={this.toggleDrawer}
+				navItems={this.getNavItems()}
+				toolbarTitle="SIBD"
+				toolbarActions={
+					<Button icon onClick={noop}>
+						search
+					</Button>
+				}
+				visible={showDrawer}
+			>
+				<MainTable />
+			</NavigationDrawer>
 		);
 	}
 }

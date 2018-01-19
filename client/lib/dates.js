@@ -1,8 +1,7 @@
 import { isString } from 'lodash-es';
 
-export const dateFromMySQL = date => {
-	return '0000-00-00' === date ? undefined : new Date(date);
-};
+export const dateFromMySQL = date =>
+	'0000-00-00' === date ? undefined : new Date(date);
 
 export const dateToMySQL = date => {
 	if (!date) {
@@ -21,3 +20,11 @@ export const newDate = () =>
 	dateFromMySQL(new Date().toISOString().substr(0, 10));
 
 export const getCurrentYear = () => new Date().getFullYear();
+
+export const displayDate = date =>
+	'0000-00-00' === date
+		? ''
+		: date
+				.split('-')
+				.reverse()
+				.join('/');

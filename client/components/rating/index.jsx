@@ -28,7 +28,12 @@ export class Rating extends PureComponent {
 		}
 	}
 
-	enterEditMode = () => this.setState({ editMode: true });
+	enterEditMode = () => {
+		if (!this.props.onChange) {
+			return;
+		}
+		this.setState({ editMode: true });
+	};
 
 	leaveEditMode = () => this.setState({ editMode: false });
 
@@ -74,9 +79,9 @@ export class Rating extends PureComponent {
 	};
 
 	render() {
-		const { className } = this.props;
+		const { className, onChange } = this.props;
 		const { editMode } = this.state;
-		const classes = classNames('rating', className);
+		const classes = classNames('rating', { editable: onChange }, className);
 		return (
 			<div className={classes} {...this.props}>
 				{editMode ? this.renderEditVersion() : this.renderViewVersion()}

@@ -11,6 +11,7 @@ const headerItems = [
 	{ label: 'Type', value: 'type' },
 	{ label: 'Start', value: 'start' },
 	{ label: 'End', value: 'end' },
+	{ label: 'Edit', value: '' },
 ];
 
 export const MainTableHeader = ({ changeSort, sortAscending, sortField }) => (
@@ -20,7 +21,7 @@ export const MainTableHeader = ({ changeSort, sortAscending, sortField }) => (
 				<TableColumn
 					className={classNames({ 'sort-field': value === sortField })}
 					key={value}
-					onClick={changeSort(value)}
+					onClick={value ? changeSort(value) : undefined}
 					role="button"
 					sorted={value === sortField ? sortAscending : undefined}
 				>

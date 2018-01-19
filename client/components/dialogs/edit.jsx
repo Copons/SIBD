@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { isEqual, omit } from 'lodash-es';
 import Button from 'react-md/lib/Buttons/Button';
 import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
 import DialogContainer from 'react-md/lib/Dialogs/DialogContainer';
@@ -7,32 +8,46 @@ import SelectField from 'react-md/lib/SelectFields/SelectField';
 import TextField from 'react-md/lib/TextFields/TextField';
 import Toolbar from 'react-md/lib/Toolbars/Toolbar';
 
-import { dateToMySQL } from 'lib/dates';
+import { dateFromMySQL, dateToMySQL } from 'lib/dates';
 import { getRatingItems } from 'lib/ratings';
 import { TYPES } from 'lib/types';
-import { insertElement } from 'state/elements/actions';
+import { updateElement } from 'state/elements/actions';
 import { getViewFilter } from 'state/ui/selectors';
 
 import './style.scss';
 
-export class InsertDialog extends PureComponent {
+export class EditDialog extends PureComponent {
 	state = {
 		elementEnd: undefined,
+		elementId: undefined,
 		elementRating: 0,
 		elementStart: undefined,
 		elementTitle: '',
 		elementType: '',
 	};
 
+	componentWillReceiveProps(nextProps) {
+		if (!isEqual(this.props, nextProps)) {
+			this.setState({
+				elementEnd: dateFromMySQL(nextProps.elementEnd),
+				elementId: nextProps.elementId,
+				elementRating: nextProps.elementRating,
+				elementStart: dateFromMySQL(nextProps.elementStart),
+				elementTitle: nextProps.elementTitle,
+				elementType: nextProps.elementType,
+			});
+		}
+	}
+
 	getActions = () => [
 		{
-			id: 'insert-element-dialog-cancel',
+			id: 'edit-element-dialog-cancel',
 			secondary: true,
 			children: 'Cancel',
 			onClick: this.props.onClose,
 		},
 		{
-			id: 'insert-element-dialog-save',
+			id: 'edit-element-dialog-save',
 			primary: true,
 			children: 'Save',
 			onClick: this.onSubmit,
@@ -42,14 +57,17 @@ export class InsertDialog extends PureComponent {
 	onSubmit = () => {
 		const element = {
 			end: dateToMySQL(this.state.elementEnd),
+			id: this.state.elementId,
 			rating: this.state.elementRating,
 			start: dateToMySQL(this.state.elementStart),
 			title: this.state.elementTitle,
 			type: this.state.elementType,
 		};
-		this.props.insertElement(element);
+		console.log(element);
+		this.props.updateElement(element);
 		this.setState({
 			elementEnd: undefined,
+			elementId: undefined,
 			elementRating: 0,
 			elementStart: undefined,
 			elementTitle: '',
@@ -86,10 +104,10 @@ export class InsertDialog extends PureComponent {
 			<DialogContainer
 				actions={this.getActions()}
 				fullPage
-				id="insert-element-dialog"
-				initialFocus="insert-element-dialog-title"
+				id="edit-element-dialog"
+				initialFocus="edit-element-dialog-title"
 				onHide={onClose}
-				aria-label="Add new element"
+				aria-label="Edit element"
 				visible={visible}
 			>
 				<Toolbar
@@ -97,11 +115,11 @@ export class InsertDialog extends PureComponent {
 					colored
 					fixed
 					nav={this.renderCloseButton()}
-					title="New Element"
+					title="Edit Element"
 				/>
 				<section className="md-toolbar-relative">
 					<TextField
-						id="insert-element-dialog-title"
+						id="edit-element-dialog-title"
 						label="Title"
 						name="title"
 						onChange={this.updateForm('elementTitle')}
@@ -109,7 +127,7 @@ export class InsertDialog extends PureComponent {
 					/>
 					<SelectField
 						fullWidth
-						id="insert-element-dialog-type"
+						id="edit-element-dialog-type"
 						label="Type"
 						menuItems={TYPES}
 						name="type"
@@ -118,21 +136,21 @@ export class InsertDialog extends PureComponent {
 					/>
 					<DatePicker
 						defaultValue={elementStart}
-						id="insert-element-dialog-start"
+						id="edit-element-dialog-start"
 						label="Start Date"
 						locales="en-GB"
 						onChange={this.updateForm('elementStart')}
 					/>
 					<DatePicker
 						defaultValue={elementEnd}
-						id="insert-element-dialog-end"
+						id="edit-element-dialog-end"
 						label="End Date"
 						locales="en-GB"
 						onChange={this.updateForm('elementEnd')}
 					/>
 					<SelectField
 						fullWidth
-						id="insert-element-dialog-rating"
+						id="edit-element-dialog-rating"
 						label="Rating"
 						menuItems={getRatingItems()}
 						name="rating"
@@ -149,6 +167,6 @@ const mapStateToProps = state => ({
 	viewFilterYear: getViewFilter(state, 'year'),
 });
 
-const mapDispatchToProps = { insertElement };
+const mapDispatchToProps = { updateElement };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InsertDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(EditDialog);

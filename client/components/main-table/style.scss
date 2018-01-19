@@ -5,13 +5,17 @@
 	th {
 		cursor: pointer;
 	}
+	th:last-child {
+		cursor: default;
+		text-align: center;
+	}
 }
 
 .sort-field {
 	font-weight: 600;
 }
 
-.table-column-title .md-edit-dialog__label {
+.table-column-title {
 	font-weight: bold;
 }
 
@@ -24,33 +28,32 @@
 	width: 200px;
 }
 
-[class*='table-column-type-'] .md-icon-text {
+.table-column-button {
+	padding-right: 16px;
+	width: 48px;
+}
+
+/*
+[class*='table-column-type-'] {
 	color: #fff;
 	font-weight: bold;
 }
-.table-column-type-book .md-menu--select-field {
+.table-column-type-book {
 	background-color: #673ab7;
 }
-.table-column-type-comic .md-menu--select-field {
+.table-column-type-comic {
 	background-color: #43a047;
 }
-.table-column-type-live .md-menu--select-field {
+.table-column-type-live {
 	background-color: #d500f9;
 }
-.table-column-type-movie .md-menu--select-field {
+.table-column-type-movie {
 	background-color: #ff9100;
 }
-.table-column-type-tv-show .md-menu--select-field {
+.table-column-type-tv-show {
 	background-color: #d50000;
 }
-.table-column-type-videogame .md-menu--select-field {
+.table-column-type-videogame {
 	background-color: #2962ff;
 }
-
-#insert-element-dialog section {
-	padding: 0 20px;
-}
-
-#insert-element-dialog .rating {
-	margin-top: 35px;
-}
+*/

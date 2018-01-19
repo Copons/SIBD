@@ -2,8 +2,11 @@
 	white-space: nowrap;
 }
 
-.rating-view-mode {
+.rating.editable .rating-view-mode {
 	cursor: pointer;
+}
+
+.rating-view-mode {
 	.md-icon {
 		color: #ff4081;
 	}

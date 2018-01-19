@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { isEqual, map, sortBy } from 'lodash-es';
+import { find, isEqual, map, sortBy } from 'lodash-es';
+import Button from 'react-md/lib/Buttons/Button';
 import DataTable from 'react-md/lib/DataTables/DataTable';
-import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
-import EditDialogColumn from 'react-md/lib/DataTables/EditDialogColumn';
-import SelectFieldColumn from 'react-md/lib/DataTables/SelectFieldColumn';
 import TableBody from 'react-md/lib/DataTables/TableBody';
 import TableColumn from 'react-md/lib/DataTables/TableColumn';
 import TableRow from 'react-md/lib/DataTables/TableRow';
 
+import EditDialog from 'components/dialogs/edit';
 import MainTableCardHeader from 'components/main-table/main-table-card-header';
 import MainTableHeader from 'components/main-table/main-table-header';
 import Rating from 'components/rating';
-import { dateFromMySQL, dateToMySQL } from 'lib/dates';
+import { dateToMySQL, displayDate } from 'lib/dates';
 import { TYPES } from 'lib/types';
 import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements, getElementsByYear } from 'state/elements/selectors';
@@ -22,6 +21,8 @@ import './style.scss';
 
 export class MainTable extends Component {
 	state = {
+		editDialogVisible: false,
+		editElement: {},
 		sortAscending: false,
 		sortField: 'end',
 	};
@@ -34,12 +35,27 @@ export class MainTable extends Component {
 		return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
 	}
 
+	closeEditDialog = () => this.setState({ editDialogVisible: false });
+
 	changeSort = field => () => {
 		this.setState(({ sortAscending, sortField }) => ({
 			sortAscending: sortField === field ? !sortAscending : true,
 			sortField: field,
 		}));
 	};
+
+	editElement = element => () =>
+		this.setState({
+			editElement: {
+				elementEnd: element.end,
+				elementId: element.id,
+				elementRating: element.rating,
+				elementStart: element.start,
+				elementTitle: element.title,
+				elementType: element.type,
+			},
+			editDialogVisible: true,
+		});
 
 	sortElements = () => {
 		const { elements } = this.props;
@@ -55,7 +71,12 @@ export class MainTable extends Component {
 	};
 
 	render() {
-		const { sortAscending, sortField } = this.state;
+		const {
+			editDialogVisible,
+			editElement,
+			sortAscending,
+			sortField,
+		} = this.state;
 		const elements = this.sortElements();
 
 		return (
@@ -71,47 +92,30 @@ export class MainTable extends Component {
 						{map(elements, element => (
 							<TableRow key={`element-${element.id}`}>
 								<TableColumn className="table-column-fixed-min-width">
-									<Rating
-										rating={element.rating}
-										onChange={this.updateElement(element, 'rating')}
-									/>
+									<Rating rating={element.rating} />
 								</TableColumn>
-								<EditDialogColumn
-									className="table-column-title"
-									defaultValue={element.title}
-									label="Title"
-									okOnOutsideClick={false}
-									onOkClick={this.updateElement(element, 'title')}
-									visibleOnFocus={false}
-								/>
-								<SelectFieldColumn
-									className={`table-column-fixed-min-width table-column-type-${
-										element.type
-									}`}
-									defaultValue={element.type}
-									menuItems={TYPES}
-									onChange={this.updateElement(element, 'type')}
-								/>
-								<TableColumn className="table-column-fixed-min-width">
-									<DatePicker
-										defaultValue={dateFromMySQL(element.start)}
-										id={`element-${element.id}-start`}
-										locales="en-GB"
-										onChange={this.updateElement(element, 'start')}
-									/>
+								<TableColumn className="table-column-title">
+									{element.title}
 								</TableColumn>
-								<TableColumn className="table-column-fixed-min-width">
-									<DatePicker
-										defaultValue={dateFromMySQL(element.end)}
-										id={`element-${element.id}-end`}
-										locales="en-GB"
-										onChange={this.updateElement(element, 'end')}
-									/>
+								<TableColumn className={`table-column-type-${element.type}`}>
+									{find(TYPES, { value: element.type }).label}
+								</TableColumn>
+								<TableColumn>{displayDate(element.start)}</TableColumn>
+								<TableColumn>{displayDate(element.end)}</TableColumn>
+								<TableColumn className="table-column-button">
+									<Button icon primary onClick={this.editElement(element)}>
+										edit
+									</Button>
 								</TableColumn>
 							</TableRow>
 						))}
 					</TableBody>
 				</DataTable>
+				<EditDialog
+					{...editElement}
+					onClose={this.closeEditDialog}
+					visible={editDialogVisible}
+				/>
 			</div>
 		);
 	}

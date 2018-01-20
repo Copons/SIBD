@@ -5,11 +5,11 @@ import Button from 'react-md/lib/Buttons/Button';
 import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
 import DialogContainer from 'react-md/lib/Dialogs/DialogContainer';
 import SelectField from 'react-md/lib/SelectFields/SelectField';
+import Slider from 'react-md/lib/Sliders/Slider';
 import TextField from 'react-md/lib/TextFields/TextField';
 import Toolbar from 'react-md/lib/Toolbars/Toolbar';
 
 import { dateFromMySQL, dateToMySQL } from 'lib/dates';
-import { getRatingItems } from 'lib/ratings';
 import { TYPES } from 'lib/types';
 import { deleteElement, updateElement } from 'state/elements/actions';
 import { getViewFilter } from 'state/ui/selectors';
@@ -32,7 +32,7 @@ export class EditDialog extends PureComponent {
 			this.setState({
 				elementEnd: dateFromMySQL(nextProps.elementEnd),
 				elementId: nextProps.elementId,
-				elementRating: nextProps.elementRating,
+				elementRating: parseInt(nextProps.elementRating, 10),
 				elementStart: dateFromMySQL(nextProps.elementStart),
 				elementTitle: nextProps.elementTitle,
 				elementType: nextProps.elementType,
@@ -198,14 +198,16 @@ export class EditDialog extends PureComponent {
 						portal
 						renderNode={document.body}
 					/>
-					<SelectField
-						fullWidth
-						id="edit-element-dialog-rating"
+					<Slider
+						discrete
+						discreteTicks={1}
+						id="edit-element-dialog-rating-s"
 						label="Rating"
-						menuItems={getRatingItems()}
-						name="rating"
+						max={10}
+						min={0}
 						onChange={this.updateForm('elementRating')}
 						value={elementRating}
+						valuePrecision={1}
 					/>
 				</section>
 				<DialogContainer

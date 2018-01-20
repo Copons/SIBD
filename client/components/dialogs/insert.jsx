@@ -4,11 +4,11 @@ import Button from 'react-md/lib/Buttons/Button';
 import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
 import DialogContainer from 'react-md/lib/Dialogs/DialogContainer';
 import SelectField from 'react-md/lib/SelectFields/SelectField';
+import Slider from 'react-md/lib/Sliders/Slider';
 import TextField from 'react-md/lib/TextFields/TextField';
 import Toolbar from 'react-md/lib/Toolbars/Toolbar';
 
 import { dateToMySQL } from 'lib/dates';
-import { getRatingItems } from 'lib/ratings';
 import { TYPES } from 'lib/types';
 import { insertElement } from 'state/elements/actions';
 import { getViewFilter } from 'state/ui/selectors';
@@ -138,14 +138,16 @@ export class InsertDialog extends PureComponent {
 						portal
 						renderNode={document.body}
 					/>
-					<SelectField
-						fullWidth
-						id="insert-element-dialog-rating"
+					<Slider
+						discrete
+						discreteTicks={1}
+						id="insert-element-dialog-rating-s"
 						label="Rating"
-						menuItems={getRatingItems()}
-						name="rating"
+						max={10}
+						min={0}
 						onChange={this.updateForm('elementRating')}
 						value={elementRating}
+						valuePrecision={1}
 					/>
 				</section>
 			</DialogContainer>

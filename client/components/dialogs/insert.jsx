@@ -85,12 +85,12 @@ export class InsertDialog extends PureComponent {
 		return (
 			<DialogContainer
 				actions={this.getActions()}
-				fullPage
+				aria-label="Add new element"
 				id="insert-element-dialog"
 				initialFocus="insert-element-dialog-title"
 				onHide={onClose}
-				aria-label="Add new element"
 				visible={visible}
+				width={600}
 			>
 				<Toolbar
 					actions={this.renderSaveButton()}
@@ -118,17 +118,25 @@ export class InsertDialog extends PureComponent {
 					/>
 					<DatePicker
 						defaultValue={elementStart}
+						disableScrollLocking
 						id="insert-element-dialog-start"
 						label="Start Date"
+						lastChild
 						locales="en-GB"
 						onChange={this.updateForm('elementStart')}
+						portal
+						renderNode={document.body}
 					/>
 					<DatePicker
 						defaultValue={elementEnd}
+						disableScrollLocking
 						id="insert-element-dialog-end"
 						label="End Date"
+						lastChild
 						locales="en-GB"
 						onChange={this.updateForm('elementEnd')}
+						portal
+						renderNode={document.body}
 					/>
 					<SelectField
 						fullWidth

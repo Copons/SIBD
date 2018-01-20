@@ -7,6 +7,9 @@ import FontIcon from 'react-md/lib/FontIcons/FontIcon';
 import { TYPES } from 'lib/types';
 
 export const TypeChip = ({ type }) => {
+	if (!type) {
+		return null;
+	}
 	const { color, icon, label } = find(TYPES, { value: type });
 	return (
 		<Chip

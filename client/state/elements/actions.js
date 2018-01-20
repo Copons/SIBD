@@ -37,3 +37,8 @@ export const updateElement = element => dispatch =>
 	sibdPost('update/elements', element).then(() =>
 		dispatch(setElement(element))
 	);
+
+export const deleteElement = elementId => dispatch =>
+	sibdGet('delete/elements', { id: elementId }).then(() =>
+		dispatch(removeElement(elementId))
+	);

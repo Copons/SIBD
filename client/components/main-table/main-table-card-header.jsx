@@ -3,22 +3,28 @@ import { connect } from 'react-redux';
 import Button from 'react-md/lib/Buttons/Button';
 import TableCardHeader from 'react-md/lib/DataTables/TableCardHeader';
 
+import AuthorsDialog from 'components/dialogs/authors';
 import InsertDialog from 'components/dialogs/insert';
 import { fetchAllElements } from 'state/elements/actions';
 import { getViewFilter } from 'state/ui/selectors';
 
 export class MainTableCardHeader extends PureComponent {
 	state = {
+		authorsDialogVisible: false,
 		insertDialogVisible: false,
 	};
 
+	closeAuthorsDialog = () => this.setState({ authorsDialogVisible: false });
+
 	closeInsertDialog = () => this.setState({ insertDialogVisible: false });
+
+	openAuthorsDialog = () => this.setState({ authorsDialogVisible: true });
 
 	openInsertDialog = () => this.setState({ insertDialogVisible: true });
 
 	render() {
 		const { viewFilterYear } = this.props;
-		const { insertDialogVisible } = this.state;
+		const { authorsDialogVisible, insertDialogVisible } = this.state;
 
 		const title = 'all' === viewFilterYear ? 'All' : viewFilterYear;
 
@@ -27,9 +33,16 @@ export class MainTableCardHeader extends PureComponent {
 				<Button icon onClick={this.openInsertDialog} primary>
 					add
 				</Button>
+				<Button icon onClick={this.openAuthorsDialog} primary>
+					person
+				</Button>
 				<Button icon onClick={this.props.fetchAllElements} secondary>
 					refresh
 				</Button>
+				<AuthorsDialog
+					onClose={this.closeAuthorsDialog}
+					visible={authorsDialogVisible}
+				/>
 				<InsertDialog
 					onClose={this.closeInsertDialog}
 					visible={insertDialogVisible}

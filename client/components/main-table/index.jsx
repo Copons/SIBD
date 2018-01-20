@@ -49,6 +49,7 @@ export class MainTable extends Component {
 	editElement = element => () =>
 		this.setState({
 			editElement: {
+				elementAuthors: element.authors,
 				elementEnd: element.end,
 				elementId: element.id,
 				elementRating: element.rating,

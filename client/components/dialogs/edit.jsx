@@ -232,7 +232,7 @@ export class EditDialog extends PureComponent {
 					<Slider
 						discrete
 						discreteTicks={1}
-						id="edit-element-dialog-rating-s"
+						id="edit-element-dialog-rating"
 						label="Rating"
 						max={10}
 						min={0}

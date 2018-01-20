@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { isEqual, map, sortBy } from 'lodash-es';
+import { isEqual, map } from 'lodash-es';
 import Button from 'react-md/lib/Buttons/Button';
 import DataTable from 'react-md/lib/DataTables/DataTable';
 import TableBody from 'react-md/lib/DataTables/TableBody';
@@ -18,6 +18,8 @@ import { getElements, getElementsByYear } from 'state/elements/selectors';
 import { getViewFilter } from 'state/ui/selectors';
 
 import './style.scss';
+
+const collator = new Intl.Collator(undefined, { numeric: true });
 
 export class MainTable extends Component {
 	state = {
@@ -60,8 +62,12 @@ export class MainTable extends Component {
 	sortElements = () => {
 		const { elements } = this.props;
 		const { sortAscending, sortField } = this.state;
-		const sortedElements = sortBy(elements, [sortField, 'start']);
-		return sortAscending ? sortedElements : sortedElements.reverse();
+		return elements.sort((a, b) => {
+			const fieldSort = sortAscending
+				? collator.compare(a[sortField], b[sortField])
+				: collator.compare(b[sortField], a[sortField]);
+			return !!fieldSort ? fieldSort : collator.compare(a.start, b.start);
+		});
 	};
 
 	updateElement = (element, field) => value => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { find, isEqual, map, sortBy } from 'lodash-es';
+import { isEqual, map, sortBy } from 'lodash-es';
 import Button from 'react-md/lib/Buttons/Button';
 import DataTable from 'react-md/lib/DataTables/DataTable';
 import TableBody from 'react-md/lib/DataTables/TableBody';
@@ -11,8 +11,8 @@ import EditDialog from 'components/dialogs/edit';
 import MainTableCardHeader from 'components/main-table/main-table-card-header';
 import MainTableHeader from 'components/main-table/main-table-header';
 import Rating from 'components/rating';
+import TypeChip from 'components/type-chip';
 import { dateToMySQL, displayDate } from 'lib/dates';
-import { TYPES } from 'lib/types';
 import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements, getElementsByYear } from 'state/elements/selectors';
 import { getViewFilter } from 'state/ui/selectors';
@@ -98,7 +98,7 @@ export class MainTable extends Component {
 									{element.title}
 								</TableColumn>
 								<TableColumn className={`table-column-type-${element.type}`}>
-									{find(TYPES, { value: element.type }).label}
+									<TypeChip type={element.type} />
 								</TableColumn>
 								<TableColumn>{displayDate(element.start)}</TableColumn>
 								<TableColumn>{displayDate(element.end)}</TableColumn>

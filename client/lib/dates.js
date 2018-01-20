@@ -1,7 +1,7 @@
 import { isString } from 'lodash-es';
 
 export const dateFromMySQL = date =>
-	'0000-00-00' === date ? undefined : new Date(date);
+	'0000-00-00' === date ? null : new Date(date);
 
 export const dateToMySQL = date => {
 	if (!date) {

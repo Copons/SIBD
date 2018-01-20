@@ -19,10 +19,10 @@ import './style.scss';
 export class EditDialog extends PureComponent {
 	state = {
 		deleteDialogVisible: false,
-		elementEnd: undefined,
+		elementEnd: null,
 		elementId: undefined,
 		elementRating: 0,
-		elementStart: undefined,
+		elementStart: null,
 		elementTitle: '',
 		elementType: '',
 	};
@@ -77,10 +77,10 @@ export class EditDialog extends PureComponent {
 		this.props.deleteElement(elementId);
 		this.setState({
 			deleteDialogVisible: false,
-			elementEnd: undefined,
+			elementEnd: null,
 			elementId: undefined,
 			elementRating: 0,
-			elementStart: undefined,
+			elementStart: null,
 			elementTitle: '',
 			elementType: '',
 		});
@@ -99,10 +99,10 @@ export class EditDialog extends PureComponent {
 		this.props.updateElement(element);
 		this.setState({
 			deleteDialogVisible: false,
-			elementEnd: undefined,
+			elementEnd: null,
 			elementId: undefined,
 			elementRating: 0,
-			elementStart: undefined,
+			elementStart: null,
 			elementTitle: '',
 			elementType: '',
 		});
@@ -111,7 +111,16 @@ export class EditDialog extends PureComponent {
 
 	openDeleteDialog = () => this.setState({ deleteDialogVisible: true });
 
-	updateForm = field => value => this.setState({ [field]: value });
+	resetEndDate = () => this.setState({ elementEnd: null });
+
+	resetStartDate = () => this.setState({ elementStart: null });
+
+	updateForm = field => value => {
+		if ('elementEnd' === field || 'elementStart' === field) {
+			return this.setState({ [field]: dateToMySQL(value) });
+		}
+		this.setState({ [field]: value });
+	};
 
 	renderCloseButton = () => (
 		<Button icon onClick={this.props.onClose}>
@@ -176,28 +185,50 @@ export class EditDialog extends PureComponent {
 						onChange={this.updateForm('elementType')}
 						value={elementType}
 					/>
-					<DatePicker
-						defaultValue={elementStart}
-						disableScrollLocking
-						id="edit-element-dialog-start"
-						label="Start Date"
-						lastChild
-						locales="en-GB"
-						onChange={this.updateForm('elementStart')}
-						portal
-						renderNode={document.body}
-					/>
-					<DatePicker
-						defaultValue={elementEnd}
-						disableScrollLocking
-						id="edit-element-dialog-end"
-						label="End Date"
-						lastChild
-						locales="en-GB"
-						onChange={this.updateForm('elementEnd')}
-						portal
-						renderNode={document.body}
-					/>
+					<div className="md-grid">
+						<DatePicker
+							autoOk
+							disableScrollLocking
+							id="edit-element-dialog-start"
+							label="Start Date"
+							lastChild
+							locales="en-GB"
+							onChange={this.updateForm('elementStart')}
+							portal
+							renderNode={document.body}
+							value={elementStart}
+						/>
+						<Button
+							className="md-cell--bottom"
+							icon
+							type="reset"
+							onClick={this.resetStartDate}
+						>
+							close
+						</Button>
+					</div>
+					<div className="md-grid">
+						<DatePicker
+							autoOk
+							disableScrollLocking
+							id="edit-element-dialog-end"
+							label="End Date"
+							lastChild
+							locales="en-GB"
+							onChange={this.updateForm('elementEnd')}
+							portal
+							renderNode={document.body}
+							value={elementEnd}
+						/>
+						<Button
+							className="md-cell--bottom"
+							icon
+							type="reset"
+							onClick={this.resetEndDate}
+						>
+							close
+						</Button>
+					</div>
 					<Slider
 						discrete
 						discreteTicks={1}

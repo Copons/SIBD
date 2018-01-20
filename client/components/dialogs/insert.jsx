@@ -17,9 +17,9 @@ import './style.scss';
 
 export class InsertDialog extends PureComponent {
 	state = {
-		elementEnd: undefined,
+		elementEnd: null,
 		elementRating: 0,
-		elementStart: undefined,
+		elementStart: null,
 		elementTitle: '',
 		elementType: '',
 	};
@@ -49,16 +49,25 @@ export class InsertDialog extends PureComponent {
 		};
 		this.props.insertElement(element);
 		this.setState({
-			elementEnd: undefined,
+			elementEnd: null,
 			elementRating: 0,
-			elementStart: undefined,
+			elementStart: null,
 			elementTitle: '',
 			elementType: '',
 		});
 		this.props.onClose();
 	};
 
-	updateForm = field => value => this.setState({ [field]: value });
+	resetEndDate = () => this.setState({ elementEnd: null });
+
+	resetStartDate = () => this.setState({ elementStart: null });
+
+	updateForm = field => value => {
+		if ('elementEnd' === field || 'elementStart' === field) {
+			return this.setState({ [field]: dateToMySQL(value) });
+		}
+		this.setState({ [field]: value });
+	};
 
 	renderCloseButton = () => (
 		<Button icon onClick={this.props.onClose}>
@@ -116,28 +125,50 @@ export class InsertDialog extends PureComponent {
 						onChange={this.updateForm('elementType')}
 						value={elementType}
 					/>
-					<DatePicker
-						defaultValue={elementStart}
-						disableScrollLocking
-						id="insert-element-dialog-start"
-						label="Start Date"
-						lastChild
-						locales="en-GB"
-						onChange={this.updateForm('elementStart')}
-						portal
-						renderNode={document.body}
-					/>
-					<DatePicker
-						defaultValue={elementEnd}
-						disableScrollLocking
-						id="insert-element-dialog-end"
-						label="End Date"
-						lastChild
-						locales="en-GB"
-						onChange={this.updateForm('elementEnd')}
-						portal
-						renderNode={document.body}
-					/>
+					<div className="md-grid">
+						<DatePicker
+							autoOk
+							disableScrollLocking
+							id="insert-element-dialog-start"
+							label="Start Date"
+							lastChild
+							locales="en-GB"
+							onChange={this.updateForm('elementStart')}
+							portal
+							renderNode={document.body}
+							value={elementStart}
+						/>
+						<Button
+							className="md-cell--bottom"
+							icon
+							type="reset"
+							onClick={this.resetStartDate}
+						>
+							close
+						</Button>
+					</div>
+					<div className="md-grid">
+						<DatePicker
+							autoOk
+							disableScrollLocking
+							id="insert-element-dialog-end"
+							label="End Date"
+							lastChild
+							locales="en-GB"
+							onChange={this.updateForm('elementEnd')}
+							portal
+							renderNode={document.body}
+							value={elementEnd}
+						/>
+						<Button
+							className="md-cell--bottom"
+							icon
+							type="reset"
+							onClick={this.resetEndDate}
+						>
+							close
+						</Button>
+					</div>
 					<Slider
 						discrete
 						discreteTicks={1}

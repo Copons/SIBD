@@ -109,6 +109,17 @@ export class MainTable extends Component {
 								<TableColumn className={`table-column-type-${element.type}`}>
 									<TypeChip type={element.type} />
 								</TableColumn>
+								<TableColumn>
+									{map(
+										element.authors,
+										({ businessName, familyName, givenName }) => (
+											<span>
+												{givenName} {familyName} {businessName}
+												<br />
+											</span>
+										)
+									)}
+								</TableColumn>
 								<TableColumn>{displayDate(element.start)}</TableColumn>
 								<TableColumn>{displayDate(element.end)}</TableColumn>
 								<TableColumn className="table-column-button">

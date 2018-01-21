@@ -9,6 +9,7 @@ const headerItems = [
 	{ label: 'Rating', value: 'rating' },
 	{ label: 'Title', value: 'title' },
 	{ label: 'Type', value: 'type' },
+	{ label: 'Authors', value: '' },
 	{ label: 'Start', value: 'start' },
 	{ label: 'End', value: 'end' },
 	{ label: 'Edit', value: '' },

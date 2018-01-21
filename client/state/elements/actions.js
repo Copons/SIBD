@@ -1,4 +1,4 @@
-import { each } from 'lodash-es';
+import { each, map } from 'lodash-es';
 
 import { sibdGet, sibdPost } from 'api';
 import {
@@ -29,14 +29,16 @@ export const fetchAllElements = () => dispatch => {
 };
 
 export const insertElement = element => dispatch =>
-	sibdPost('insert/elements', element).then(({ id }) =>
-		dispatch(setElement({ ...element, id }))
-	);
+	sibdPost('insert/elements', {
+		...element,
+		authors: map(element.authors, 'id'),
+	}).then(({ id }) => dispatch(setElement({ ...element, id })));
 
 export const updateElement = element => dispatch =>
-	sibdPost('update/elements', element).then(() =>
-		dispatch(setElement(element))
-	);
+	sibdPost('update/elements', {
+		...element,
+		authors: map(element.authors, 'id'),
+	}).then(() => dispatch(setElement(element)));
 
 export const deleteElement = elementId => dispatch =>
 	sibdGet('delete/elements', { id: elementId }).then(() =>

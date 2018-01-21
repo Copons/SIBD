@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash-es';
+import { find, isEqual, map, reject } from 'lodash-es';
+import Autocomplete from 'react-md/lib/Autocompletes/Autocomplete';
 import Button from 'react-md/lib/Buttons/Button';
+import Chip from 'react-md/lib/Chips/Chip';
 import DatePicker from 'react-md/lib/Pickers/DatePickerContainer';
 import DialogContainer from 'react-md/lib/Dialogs/DialogContainer';
 import SelectField from 'react-md/lib/SelectFields/SelectField';
@@ -11,6 +13,7 @@ import Toolbar from 'react-md/lib/Toolbars/Toolbar';
 
 import { dateFromMySQL, dateToMySQL } from 'lib/dates';
 import { TYPES } from 'lib/types';
+import { getAuthors } from 'state/authors/selectors';
 import { deleteElement, updateElement } from 'state/elements/actions';
 import { getViewFilter } from 'state/ui/selectors';
 
@@ -19,6 +22,7 @@ import './style.scss';
 export class EditDialog extends PureComponent {
 	state = {
 		deleteDialogVisible: false,
+		elementAuthors: [],
 		elementEnd: null,
 		elementId: undefined,
 		elementRating: 0,
@@ -30,6 +34,7 @@ export class EditDialog extends PureComponent {
 	componentWillReceiveProps(nextProps) {
 		if (!isEqual(this.props, nextProps)) {
 			this.setState({
+				elementAuthors: nextProps.elementAuthors || [],
 				elementEnd: dateFromMySQL(nextProps.elementEnd),
 				elementId: nextProps.elementId,
 				elementRating: parseInt(nextProps.elementRating, 10),
@@ -41,6 +46,13 @@ export class EditDialog extends PureComponent {
 	}
 
 	closeDeleteDialog = () => this.setState({ deleteDialogVisible: false });
+
+	formatAuthors = () =>
+		map(this.props.authors, author => ({
+			label:
+				author.givenName + ' ' + author.familyName + ' ' + author.businessName,
+			value: author.id,
+		}));
 
 	getActions = () => [
 		{
@@ -72,11 +84,19 @@ export class EditDialog extends PureComponent {
 		},
 	];
 
+	onAddAuthor = value => {
+		const author = find(this.props.authors, { id: value });
+		this.setState(({ elementAuthors }) => ({
+			elementAuthors: [...elementAuthors, author],
+		}));
+	};
+
 	onDelete = () => {
 		const { elementId } = this.state;
 		this.props.deleteElement(elementId);
 		this.setState({
 			deleteDialogVisible: false,
+			elementAuthors: [],
 			elementEnd: null,
 			elementId: undefined,
 			elementRating: 0,
@@ -87,8 +107,15 @@ export class EditDialog extends PureComponent {
 		this.props.onClose();
 	};
 
+	onRemoveAuthor = authorId => () => {
+		this.setState(({ elementAuthors }) => ({
+			elementAuthors: reject(elementAuthors, { id: authorId }),
+		}));
+	};
+
 	onSubmit = () => {
 		const element = {
+			authors: this.state.elementAuthors,
 			end: dateToMySQL(this.state.elementEnd),
 			id: this.state.elementId,
 			rating: this.state.elementRating,
@@ -99,6 +126,7 @@ export class EditDialog extends PureComponent {
 		this.props.updateElement(element);
 		this.setState({
 			deleteDialogVisible: false,
+			elementAuthors: [],
 			elementEnd: null,
 			elementId: undefined,
 			elementRating: 0,
@@ -144,6 +172,7 @@ export class EditDialog extends PureComponent {
 		const { onClose, visible } = this.props;
 		const {
 			deleteDialogVisible,
+			elementAuthors,
 			elementEnd,
 			elementRating,
 			elementStart,
@@ -185,6 +214,28 @@ export class EditDialog extends PureComponent {
 						onChange={this.updateForm('elementType')}
 						value={elementType}
 					/>
+					<div>
+						<Autocomplete
+							clearOnAutocomplete
+							data={this.formatAuthors()}
+							dataLabel="label"
+							dataValue="value"
+							id="edit-element-dialog-authors"
+							label="Authors"
+							onAutocomplete={this.onAddAuthor}
+						/>
+						{map(
+							elementAuthors,
+							({ businessName, familyName, givenName, id }) => (
+								<Chip
+									key={`author-${id}`}
+									label={givenName + ' ' + familyName + ' ' + businessName}
+									onClick={this.onRemoveAuthor(id)}
+									removable
+								/>
+							)
+						)}
+					</div>
 					<div className="md-grid">
 						<DatePicker
 							autoOk
@@ -237,7 +288,7 @@ export class EditDialog extends PureComponent {
 						max={10}
 						min={0}
 						onChange={this.updateForm('elementRating')}
-						value={elementRating}
+						value={elementRating || 0}
 						valuePrecision={1}
 					/>
 				</section>
@@ -260,6 +311,7 @@ export class EditDialog extends PureComponent {
 }
 
 const mapStateToProps = state => ({
+	authors: getAuthors(state),
 	viewFilterYear: getViewFilter(state, 'year'),
 });
 

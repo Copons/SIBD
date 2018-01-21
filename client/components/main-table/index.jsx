@@ -13,6 +13,7 @@ import MainTableHeader from 'components/main-table/main-table-header';
 import Rating from 'components/rating';
 import TypeChip from 'components/type-chip';
 import { dateToMySQL, displayDate } from 'lib/dates';
+import { fetchAllAuthors } from 'state/authors/actions';
 import { fetchAllElements, updateElement } from 'state/elements/actions';
 import { getElements, getElementsByYear } from 'state/elements/selectors';
 import { getViewFilter } from 'state/ui/selectors';
@@ -30,6 +31,7 @@ export class MainTable extends Component {
 	};
 
 	componentWillMount() {
+		this.props.fetchAllAuthors();
 		this.props.fetchAllElements();
 	}
 
@@ -138,6 +140,6 @@ const mapStateToProps = state => {
 	return { elements };
 };
 
-const mapDispatchToProps = { fetchAllElements, updateElement };
+const mapDispatchToProps = { fetchAllAuthors, fetchAllElements, updateElement };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainTable);

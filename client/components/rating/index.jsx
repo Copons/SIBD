@@ -66,13 +66,19 @@ export class Rating extends PureComponent {
 		return (
 			<span className="rating-view-mode" onClick={this.enterEditMode}>
 				{[...new Array(fullStars)].map((star, index) => (
-					<FontIcon key={`full-${index}`}>star</FontIcon>
+					<FontIcon className="rating-star" key={`full-${index}`}>
+						star
+					</FontIcon>
 				))}
 
-				{!!halfStar && <FontIcon>star_half</FontIcon>}
+				{!!halfStar && (
+					<FontIcon className="rating-half-star">star_half</FontIcon>
+				)}
 
 				{[...new Array(5 - fullStars - halfStar)].map((star, index) => (
-					<FontIcon key={`full-${index}`}>star_border</FontIcon>
+					<FontIcon className="rating-empty-star" key={`full-${index}`}>
+						star_border
+					</FontIcon>
 				))}
 			</span>
 		);

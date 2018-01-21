@@ -21,10 +21,10 @@ export const MainTableHeader = ({ changeSort, sortAscending, sortField }) => (
 			{map(headerItems, ({ label, value }) => (
 				<TableColumn
 					className={classNames({ 'sort-field': value === sortField })}
-					key={value}
+					key={label}
 					onClick={value ? changeSort(value) : undefined}
 					role="button"
-					sorted={value === sortField ? sortAscending : undefined}
+					sorted={value === sortField ? !sortAscending : undefined}
 				>
 					{label}
 				</TableColumn>

@@ -112,8 +112,8 @@ export class MainTable extends Component {
 								<TableColumn>
 									{map(
 										element.authors,
-										({ businessName, familyName, givenName }) => (
-											<span>
+										({ businessName, familyName, givenName, id }) => (
+											<span key={`author-${id}`}>
 												{givenName} {familyName} {businessName}
 												<br />
 											</span>
